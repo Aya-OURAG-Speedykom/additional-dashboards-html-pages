@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vaccine Procurement Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .dashboard-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .analysis-section {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #343a40;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .kpi-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            flex: 1;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .kpi-title {
+            color: #343a40;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .kpi-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .human-color {
+            color: #3498db;
+        }
+
+        .dog-color {
+            color: #e74c3c;
+        }
+
+        .gap-color {
+            color: #f39c12;
+        }
+
+        .kpi-subtext {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .filter-group label {
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 100% !important;
+            max-height: 400px;
+        }
+
+        .legend {
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-title">Dashboard 2: Priority 1 - Vaccine Procurement Decisions</div>
+
+    <div class="dashboard">
+        <!-- Human Vaccine Analysis -->
+        <div class="analysis-section">
+            <h3 class="section-title">Analysis 1: Human Vaccine Procurement Gap</h3>
+            <p>Compare human vaccine doses procured vs. needed </p>
+
+            <div class="kpi-section">
+                <div class="kpi-card">
+                    <div class="kpi-title">Vaccines Procured</div>
+                    <div class="kpi-number human-color">15,000</div>
+                    <div class="kpi-subtext">Doses available</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Vaccines Needed</div>
+                    <div class="kpi-number human-color">18,500</div>
+                    <div class="kpi-subtext">Doses needed</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Gap</div>
+                    <div class="kpi-number gap-color">3,500</div>
+                    <div class="kpi-subtext">Shortage</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Vaccination Rate</div>
+                    <div class="kpi-number human-color">81%</div>
+                    <div class="kpi-subtext">Coverage of needed vaccines</div>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="humanDistrict">District</label>
+                    <select id="humanDistrict">
+                        <option>All Districts</option>
+                        <option>Balaka</option>
+                        <option>Blantyre</option>
+                        <option>Chikwawa</option>
+                        <option>Chiradzulu</option>
+                        <option>Chitipa</option>
+                        <option>Dedza</option>
+                        <option>Dowa</option>
+                        <option>Karonga</option>
+                        <option>Kasungu</option>
+                        <option>Likoma</option>
+                        <option>Lilongwe</option>
+                        <option>Machinga</option>
+                        <option>Mangochi</option>
+                        <option>Mchinji</option>
+                        <option>Mulanje</option>
+                        <option>Mwanza</option>
+                        <option>Mzimba</option>
+                        <option>Neno</option>
+                        <option>Nkhata Bay</option>
+                        <option>Nkhotakota</option>
+                        <option>Nsanje</option>
+                        <option>Ntcheu</option>
+                        <option>Ntchisi</option>
+                        <option>Phalombe</option>
+                        <option>Rumphi</option>
+                        <option>Salima</option>
+                        <option>Thyolo</option>
+                        <option>Zomba</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="humanYear">Year</label>
+                    <select id="humanYear">
+                        <option>2024</option>
+                        <option>2023</option>
+                        <option>2022</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="humanMonth">Month</label>
+                    <select id="humanMonth">
+                        <option>All Months</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="humanVaccineChart"></canvas>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <span>Vaccines Procured</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <span>Vaccines Needed</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                    <span>Gap</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dog Vaccine Analysis - Aligned with Human Vaccine Analysis -->
+        <div class="analysis-section">
+            <h3 class="section-title">Analysis 2: Dog Vaccine Procurement Gap</h3>
+            <p>Compare dog vaccine doses procured vs. needed</p>
+
+            <div class="kpi-section">
+                <div class="kpi-card">
+                    <div class="kpi-title">Vaccines Procured</div>
+                    <div class="kpi-number dog-color">25,000</div>
+                    <div class="kpi-subtext">Doses available</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Vaccines Needed</div>
+                    <div class="kpi-number dog-color">35,000</div>
+                    <div class="kpi-subtext">Doses needed</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Gap</div>
+                    <div class="kpi-number gap-color">10,000</div>
+                    <div class="kpi-subtext">Shortage</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Vaccination Rate</div>
+                    <div class="kpi-number dog-color">71%</div>
+                    <div class="kpi-subtext">Coverage of needed vaccines</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Dog Population</div>
+                    <div class="kpi-number dog-color">50,000</div>
+                    <div class="kpi-subtext">total dogs</div>
+                </div>
+
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="dogDistrict">District</label>
+                    <select id="dogDistrict">
+                        <option>All Districts</option>
+                        <option>Balaka</option>
+                        <option>Blantyre</option>
+                        <option>Chikwawa</option>
+                        <option>Chiradzulu</option>
+                        <option>Chitipa</option>
+                        <option>Dedza</option>
+                        <option>Dowa</option>
+                        <option>Karonga</option>
+                        <option>Kasungu</option>
+                        <option>Likoma</option>
+                        <option>Lilongwe</option>
+                        <option>Machinga</option>
+                        <option>Mangochi</option>
+                        <option>Mchinji</option>
+                        <option>Mulanje</option>
+                        <option>Mwanza</option>
+                        <option>Mzimba</option>
+                        <option>Neno</option>
+                        <option>Nkhata Bay</option>
+                        <option>Nkhotakota</option>
+                        <option>Nsanje</option>
+                        <option>Ntcheu</option>
+                        <option>Ntchisi</option>
+                        <option>Phalombe</option>
+                        <option>Rumphi</option>
+                        <option>Salima</option>
+                        <option>Thyolo</option>
+                        <option>Zomba</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="dogYear">Year</label>
+                    <select id="dogYear">
+                        <option>2024</option>
+                        <option>2023</option>
+                        <option>2022</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="dogMonth">Month</label>
+                    <select id="dogMonth">
+                        <option>All Months</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="dogVaccineChart"></canvas>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <span>Vaccines Procured</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #27ae60;"></div>
+                    <span>Vaccines Needed</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                    <span>Gap</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Human Vaccine Chart
+        const humanCtx = document.getElementById('humanVaccineChart').getContext('2d');
+        const humanVaccineChart = new Chart(humanCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: 'Vaccines Procured',
+                        data: [1200, 1100, 1300, 1250, 1400, 1500, 1450, 1600, 1700, 1650, 1800, 1900],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Vaccines Needed',
+                        data: [1500, 1450, 1600, 1550, 1700, 1800, 1750, 1900, 2000, 1950, 2100, 2200],
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Gap',
+                        data: [300, 350, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300],
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Human Vaccine Procurement vs Need (Monthly)'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Doses'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Dog Vaccine Chart - Aligned with Human Vaccine Chart
+        const dogCtx = document.getElementById('dogVaccineChart').getContext('2d');
+        const dogVaccineChart = new Chart(dogCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                    {
+                        label: 'Vaccines Procured',
+                        data: [2000, 1900, 2100, 2050, 2200, 2300, 2250, 2400, 2500, 2450, 2600, 2700],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Vaccines Needed',
+                        data: [3200, 3150, 3300, 3250, 3400, 3350, 3500, 3450, 3600, 3550, 3700, 3650],
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Gap',
+                        data: [1200, 1250, 1200, 1200, 1200, 1050, 1250, 1050, 1100, 1100, 1100, 950],
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Dog Vaccine Procurement vs Need (Monthly)'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Doses'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Filter Event Listeners
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                console.log(`Filter changed: ${select.id} = ${select.value}`);
+                // Add your actual filter logic here
+                // This would typically update the chart data based on the selected filters
+            });
+        });
+    </script>
+</body>
+
+</html>
